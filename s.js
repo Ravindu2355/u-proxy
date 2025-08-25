@@ -1,5 +1,6 @@
 const express = require("express");
 const request = require("request");
+const fetch = require("node-fetch"); // npm install node-fetch@2
 
 const app = express();
 
@@ -65,6 +66,53 @@ function buildForwardHeaders(req, queryHeaders, cookieFromQuery, refererFromQuer
  */
 app.get("/", (req, res) => {
   res.send("Hello World");
+});
+
+/**
+ * --- New 2-session fetch endpoint ---
+ * Usage: /fetch2session?url=<target>
+ */
+app.get("/f2s", apiKeyMiddleware, async (req, res) => {
+  const targetUrl = req.query.url;
+  if (!targetUrl) return res.status(400).json({ error: "Missing 'url' parameter" });
+
+  try {
+    const headers = {
+      "User-Agent":
+        "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 " +
+        "(KHTML, like Gecko) Chrome/124.0.0.0 Safari/537.36",
+      "Accept":
+        "text/html,application/xhtml+xml,application/xml;q=0.9,image/avif," +
+        "image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3;q=0.7",
+      "Accept-Language": "en-US,en;q=0.9",
+      "Upgrade-Insecure-Requests": "1",
+      "Sec-CH-UA": '"Not-A.Brand";v="99", "Chromium";v="124"',
+      "Sec-CH-UA-Mobile": "?1",
+      "Sec-CH-UA-Platform": '"Android"',
+    };
+
+    // First request
+    const r1 = await fetch(targetUrl, { headers, redirect: "manual" });
+    const setCookies = r1.headers.raw()["set-cookie"] || [];
+    const cookieHeader = setCookies.map(c => c.split(";")[0]).join("; ");
+
+    // Second request with cookies
+    const r2 = await fetch(targetUrl, {
+      headers: { ...headers, Cookie: cookieHeader },
+      redirect: "follow",
+    });
+
+    const body = await r2.text();
+
+    res.json({
+      status: r2.status,
+      headers: Object.fromEntries(r2.headers),
+      body: body.slice(0, 1000) + (body.length > 1000 ? "..." : ""), // preview only
+    });
+  } catch (err) {
+    console.error("2-session fetch error:", err);
+    res.status(500).json({ error: err.message });
+  }
 });
 
 const tough = require("tough-cookie"); // npm install tough-cookie
