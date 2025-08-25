@@ -2,7 +2,7 @@
   "name": "universal-streaming-proxy",
   "version": "1.0.0",
   "description": "Universal streaming proxy with cookie handling, API key auth, and 2-session fetch",
-  "main": "is.js",
+  "main": "s.js",
   "scripts": {
     "start": "node s.js",
     "dev": "nodemon s.js"
