@@ -2,17 +2,16 @@
   "name": "universal-proxy",
   "version": "1.0.0",
   "description": "Universal streaming proxy with API key protection and browser-fetch using Puppeteer",
-  "main": "proxy.js",
+  "main": "s.js",
   "scripts": {
-    "start": "node proxy.js",
-    "dev": "NODE_ENV=development nodemon proxy.js"
+    "start": "node s.js",
+    "dev": "NODE_ENV=development nodemon s.js"
   },
   "author": "Your Name",
   "license": "MIT",
   "dependencies": {
     "express": "^4.19.2",
-    "puppeteer": "^24.9.0",
-    "axios": "^1.7.7"
+    "requests":"^0.0.1"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
