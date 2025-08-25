@@ -1,22 +1,29 @@
 {
-  "name": "universal-proxy",
+  "name": "universal-streaming-proxy",
   "version": "1.0.0",
-  "description": "Universal streaming proxy with API key protection and browser-fetch using Puppeteer",
-  "main": "s.js",
+  "description": "Universal streaming proxy with cookie handling, API key auth, and 2-session fetch",
+  "main": "is.js",
   "scripts": {
     "start": "node s.js",
-    "dev": "NODE_ENV=development nodemon s.js"
+    "dev": "nodemon s.js"
   },
-  "author": "Your Name",
+  "keywords": [
+    "proxy",
+    "streaming",
+    "express",
+    "request",
+    "fetch",
+    "cookies"
+  ],
+  "author": "",
   "license": "MIT",
   "dependencies": {
-    "express": "^4.19.2",
-    "requests":"^0.0.1"
+    "express": "^4.18.2",
+    "request": "^2.88.2",
+    "tough-cookie": "^4.1.3",
+    "node-fetch": "^2.6.9"
   },
   "devDependencies": {
     "nodemon": "^3.1.0"
-  },
-  "engines": {
-    "node": ">=18.0.0"
   }
 }
