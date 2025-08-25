@@ -1,9 +1,11 @@
 const express = require("express");
 const request = require("request");
 const fetch = require("node-fetch"); // npm install node-fetch@2
+const cors = require("cors")
 
 const app = express();
 
+app.use(cors())
 // Read your API key from env
 const API_KEY = process.env.API_KEY || null;
 
