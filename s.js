@@ -239,8 +239,8 @@ app.all("/video", apiKeyMiddleware, (req, res) => {
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true, limit: "50mb" }));
 
-app.listen(3000, () => {
-  console.log("🚀 Universal streaming proxy running at http://localhost:3000");
+app.listen(8000, () => {
+  console.log("🚀 Universal streaming proxy running at http://localhost:8000");
   if (API_KEY) console.log("🔐 API Key protection enabled");
   else console.log("⚠️ Warning: API Key NOT set. Proxy is open to public!");
 });
