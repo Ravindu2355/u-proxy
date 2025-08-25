@@ -1,8 +1,9 @@
 # Use official Node.js LTS slim image
 FROM node:18-slim
 
-# Install dependencies for Puppeteer / Chromium
+# Install Chromium and required dependencies for Puppeteer
 RUN apt-get update && apt-get install -y \
+    chromium \
     ca-certificates \
     fonts-liberation \
     libatk-bridge2.0-0 \
@@ -30,23 +31,25 @@ RUN apt-get update && apt-get install -y \
     --no-install-recommends && \
     rm -rf /var/lib/apt/lists/*
 
-# Create app directory
+# Set working directory
 WORKDIR /usr/src/app
 
-# Copy package.json and package-lock.json if you have it
-COPY package.json ./
+# Copy package files first for better layer caching
+COPY package*.json ./
 
-# Install app dependencies
-RUN npm install --production
+# Install production dependencies only
+RUN npm ci --omit=dev
 
-# Copy app source code
+# Copy app source
 COPY . .
 
-# Puppeteer needs this env variable
-ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium-browser
+# Puppeteer config (use system Chromium instead of downloading)
+ENV PUPPETEER_EXECUTABLE_PATH=/usr/bin/chromium \
+    PUPPETEER_SKIP_CHROMIUM_DOWNLOAD=true \
+    NODE_ENV=production
 
-# Expose port
-EXPOSE 3000
+# Expose app port
+EXPOSE 8000
 
-# Start the app
+# Start app
 CMD ["npm", "start"]
